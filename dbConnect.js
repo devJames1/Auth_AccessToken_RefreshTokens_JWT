@@ -1,8 +1,11 @@
 //Here we put our instructions for our database connection
-import { default as mongodb } from 'mongodb';
-let MongoClient = mongodb.MongoClient;
-const uri = process.env.DB_URL
+import { MongoClient } from 'mongodb';
 
+import { config } from "dotenv";
+config();
+
+const uri = process.env.DB_URL
+console.log(uri)
 const withDB = async (operations) => {
     try {
         const client = await MongoClient.connect(uri, {

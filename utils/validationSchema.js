@@ -21,5 +21,12 @@ const loginBodyValidation = (body) => {
     return schema.validate(body);
 }
 
+//refresh token validation
+const refreshTokenBodyValidation = (body) => {
+    const schema = Joi.object({
+        refreshToken: Joi.string().required().label("Refresh Token"),
+    })
+    return schema.validate(body);
+}
 
-export { signUpBodyValidation, loginBodyValidation }
+export { signUpBodyValidation, loginBodyValidation, refreshTokenBodyValidation }

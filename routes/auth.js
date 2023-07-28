@@ -1,9 +1,12 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 
-import withDB from "../dbConnect";
-import { signUpBodyValidation, loginBodyValidation } from "../utils/validationSchema";
-import generateAuthTokens from "../utils/generateTokens";
+import { config } from "dotenv";
+config();
+
+import withDB from "../dbConnect.js";
+import { signUpBodyValidation, loginBodyValidation } from "../utils/validationSchema.js";
+import generateAuthTokens from "../utils/generateTokens.js";
 
 const router = Router();
 
@@ -22,7 +25,9 @@ router.post("/signup", async (req, res) => {
 
             const salt = await bcrypt.genSalt(Number(process.env.SALT));
             const hashPassword = await bcrypt.hash(req.body.password, salt);
-            await db.collection("user").insertOne({ ...req.body, password: hashPassword })
+
+            console.log({ ...req.body, password: hashPassword, roles: ["user"] })
+            await db.collection("users").insertOne({ ...req.body, password: hashPassword, roles: ["user"] })
 
             res.status(201).json({ error: false, message: "Account created successfully" });
         })
@@ -41,7 +46,7 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ error: true, message: error.details[0].message });
         }
         withDB(async (db) => {
-            const user = await db.collection("user").findOne({ email: req.body.email })
+            const user = await db.collection("users").findOne({ email: req.body.email })
             if (!user) {
                 return res.status(400).json({ error: true, message: "Email not found" })
             }

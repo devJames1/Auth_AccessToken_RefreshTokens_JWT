@@ -1,17 +1,19 @@
 import express from "express";
 import { config } from "dotenv";
-
-import authRoutes from "./routes/auth";
-
 config();
+
+import authRoutes from "./routes/auth.js";
+import refreshTokenRoutes from "./routes/refreshToken.js"
+import userRoutes from "./routes/users.js";
+
 
 const app = express();
 
 app.use(express.json());
 
 app.use("/api", authRoutes);
-
-
+app.use("/api/refreshToken", refreshTokenRoutes)
+app.use("/api/users", userRoutes);
 
 const port = process.env.PORT || 8080;
 

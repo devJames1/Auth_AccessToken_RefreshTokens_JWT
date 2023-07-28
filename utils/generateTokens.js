@@ -1,12 +1,15 @@
 import jwt from "jsonwebtoken";
-import { createTTLIndex } from "../models/userToken.model"
-import withDB from "../dbConnect";
+import { createTTLIndex } from "../models/userToken.model.js"
+import withDB from "../dbConnect.js";
+
+import { config } from "dotenv";
+config();
 
 
 // generate token for user
 async function generateAuthTokens(user) {
     try {
-        const payload = { _id: user._id };
+        const payload = { _id: user._id, roles: user.roles };
         const accessToken = jwt.sign(
             payload, process.env.ACCESS_TOKEN_PRIVATE_KEY,
             { expiresIn: "14m" }
@@ -24,11 +27,10 @@ async function generateAuthTokens(user) {
                 await db.collection("users_token").deleteOne({ userId: user._id })
             }
 
-            createTTLIndex(db);
+            await createTTLIndex(db);
             await db.collection("users_token").insertOne({ userId: user._id, token: refreshToken, createdAt: new Date(), })
-
-            return ({ accessToken, refreshToken });
         })
+        return { accessToken, refreshToken };
 
     } catch (error) {
         return error;
