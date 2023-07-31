@@ -15,7 +15,7 @@ router.post("/signup", async (req, res) => {
     try {
         const { error } = signUpBodyValidation(req.body);
         if (error) {
-            return res.status(400).json({ error: true, message: error.details[0].message }); S
+            return res.status(400).json({ error: true, message: error.details[0].message });
         }
         withDB(async (db) => {
             const user = await db.collection('users').findOne({ email: req.body.email });
