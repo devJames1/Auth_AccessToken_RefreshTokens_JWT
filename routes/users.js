@@ -5,7 +5,7 @@ import roleCheck from "../middleware/roleCheck.js";
 
 const router = Router();
 
-router.get("/details", auth, roleCheck(["user"]), (req, res) => {
+router.get("/details", auth, roleCheck(["admin"]), (req, res) => {
     res.status(200).json({ message: "User have access right" })
 })
 
