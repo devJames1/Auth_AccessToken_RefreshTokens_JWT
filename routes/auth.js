@@ -26,7 +26,7 @@ router.post("/signup", async (req, res) => {
             const salt = await bcrypt.genSalt(Number(process.env.SALT));
             const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-            console.log({ ...req.body, password: hashPassword, roles: ["user"] })
+            // console.log({ ...req.body, password: hashPassword, roles: ["user"] })
             await db.collection("users").insertOne({ ...req.body, password: hashPassword, roles: ["user"] })
 
             res.status(201).json({ error: false, message: "Account created successfully" });
